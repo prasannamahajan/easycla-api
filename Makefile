@@ -25,8 +25,8 @@ setup_dev:
 	go get -u golang.org/x/tools/cmd/goimports
 	go get -u github.com/golang/dep/cmd/dep	
 	go get -u github.com/stripe/safesql
-	sudo curl -fsSL -o /usr/local/bin/dbmate https://github.com/amacneil/dbmate/releases/download/v1.7.0/dbmate-linux-amd64
-	sudo chmod +x /usr/local/bin/dbmate
+	curl -fsSL -o /usr/local/bin/dbmate https://github.com/amacneil/dbmate/releases/download/v1.7.0/dbmate-linux-amd64
+	chmod +x /usr/local/bin/dbmate
 
 clean:
 	rm -rf ./gen ./bin
