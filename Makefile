@@ -24,6 +24,7 @@ setup_dev:
 	go get -u github.com/go-swagger/go-swagger/cmd/swagger
 	go get -u golang.org/x/tools/cmd/goimports
 	go get -u github.com/golang/dep/cmd/dep	
+	go get github.com/urfave/cli
 	go get -u github.com/amacneil/dbmate
 	go get -u github.com/stripe/safesql
 
