@@ -25,7 +25,7 @@ setup_dev:
 	go get -u golang.org/x/tools/cmd/goimports
 	go get -u github.com/golang/dep/cmd/dep	
 	go get -u github.com/stripe/safesql
-	go module-get github.com/amacneil/dbmate
+	GO111MODULE=auto go get -u github.com/amacneil/dbmate
 
 clean:
 	rm -rf ./gen ./bin
