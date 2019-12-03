@@ -22,10 +22,10 @@ jobs:
             - go-mod-v1-{{ checksum "go.sum" }}
       - run:
           name: Install and setup
-          command: make setup
+          command: GO111MODULE=off make setup
       - run:
           name: Install cover
-          command: go get golang.org/x/tools/cmd/cover
+          command: GO111MODULE=off go get golang.org/x/tools/cmd/cover
       - add_ssh_keys:
           fingerprints:
             - "aa:a4:6b:7e:51:9c:31:a3:10:5a:43:e2:e4:87:b7:c0"
