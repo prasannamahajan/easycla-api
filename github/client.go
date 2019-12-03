@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/bradleyfalzon/ghinstallation"
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v28/github"
 )
 
 // Client is container for go-github Client
@@ -15,7 +15,7 @@ type Client struct {
 
 // NewGithubAppClient function creates github client for installation
 func NewGithubAppClient(installationID int64) (*Client, error) {
-	itr, err := ghinstallation.New(http.DefaultTransport, getGithubAppID(), int(installationID), []byte(getGitubAppPrivateKey()))
+	itr, err := ghinstallation.New(http.DefaultTransport, int64(getGithubAppID()), installationID, []byte(getGitubAppPrivateKey()))
 	if err != nil {
 		log.Println("Unable to create github installation client", err)
 		return nil, err

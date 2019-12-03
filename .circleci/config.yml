@@ -19,7 +19,7 @@ jobs:
       - restore_cache:
           name: Restore Cache
           keys:
-            - dep-packages-{{ checksum "Gopkg.lock" }}
+            - go-mod-v1-{{ checksum "go.sum" }}
       - run:
           name: Install and setup
           command: make setup
@@ -30,17 +30,11 @@ jobs:
           fingerprints:
             - "aa:a4:6b:7e:51:9c:31:a3:10:5a:43:e2:e4:87:b7:c0"
       - run:
-          name: Download dependencies
-          command: dep ensure -v
-      - run:
           name: Swagger Code Generation
           command: make swagger
       - run:
           name: Swagger Code Spec Validation
           command: make swagger-validate
-      - run:
-          name: Download dependencies
-          command: make deps
       - run:
           name: Lint
           command: make lint
@@ -51,16 +45,10 @@ jobs:
           name: Test
           command: make test
       - save_cache:
-          name: Save Dep Cache
-          key: dep-packages-{{ checksum "Gopkg.lock" }}
+          name: Save Module Cache
+          key: go-mod-v1-{{ checksum "go.sum" }}
           paths:
-            - vendor
-            - node_modules
-      - persist_to_workspace:
-          root: ./
-          paths:
-            - vendor
-            - node_modules
+            - "/go/pkg/mod"
 
 workflows:
   build:

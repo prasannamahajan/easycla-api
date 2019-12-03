@@ -5,7 +5,7 @@ import (
 
 	"github.com/communitybridge/easycla-api/config"
 
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v28/github"
 )
 
 var gs *service

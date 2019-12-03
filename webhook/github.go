@@ -7,7 +7,7 @@ import (
 	"github.com/communitybridge/easycla-api/gen/restapi/operations"
 	"github.com/communitybridge/easycla-api/gen/restapi/operations/webhook"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v28/github"
 )
 
 // Configure github webhook

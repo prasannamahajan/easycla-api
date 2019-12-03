@@ -3,7 +3,7 @@ package webhook
 import (
 	ghb "github.com/communitybridge/easycla-api/github"
 	log "github.com/communitybridge/easycla-api/logging"
-	"github.com/google/go-github/github"
+	"github.com/google/go-github/v28/github"
 )
 
 // ProcessPullRequestEvent functions processes the pull request event

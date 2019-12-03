@@ -12,6 +12,7 @@ LINT_TOOL=$(shell go env GOPATH)/bin/golangci-lint
 GO_PKGS=$(shell go list ./... | grep -v /vendor/ | grep -v /node_modules/)
 GO_FILES=$(shell find . -type f -name '*.go' -not -path './vendor/*')
 TEST_ENV=AWS_REGION=us-east-1 CLA_SERVICE_AWS_ACCESS_KEY_ID=test-env-aws-access-key-id CLA_SERVICE_AWS_SECRET_ACCESS_KEY=test-env-aws-secret-access-key
+GOPRIVATE= github.com/LF-Engineering/lfx-kit/auth
 
 # Determine the OS
 UNAME_S := $(shell uname -s)
@@ -36,7 +37,7 @@ endif
 ifneq ($(filter arm%,$(UNAME_P)),)
 	detected_arch=arm
 endif
-.PHONY: generate setup setup_dev setup_deploy clean swagger up fmt test run deps build build-mac build_aws_lambda qc lint
+.PHONY: generate setup setup_dev setup_deploy clean swagger up fmt test run build build-mac build_aws_lambda qc lint
 
 generate: swagger
 
@@ -46,7 +47,6 @@ setup: $(LINT_TOOL) setup_dev
 setup_dev: dbmate
 	go get -u github.com/go-swagger/go-swagger/cmd/swagger
 	go get -u golang.org/x/tools/cmd/goimports
-	go get -u github.com/golang/dep/cmd/dep	
 	go get -u github.com/stripe/safesql
 
 dbmate:
@@ -59,7 +59,7 @@ clean:
 
 swagger: clean
 	mkdir gen
-	swagger -q generate server -t gen -f swagger/cla.yaml --exclude-main -A cla -P auth.User
+	swagger -q generate server -t gen -f swagger/cla.yaml --exclude-main -A cla --existing-models "github.com/LF-Engineering/lfx-kit/auth" --principal auth.User
 
 swagger-validate:
 	swagger validate swagger/cla.yaml
@@ -77,22 +77,19 @@ test:
 run:
 	go run main.go
 
-deps:
-	dep ensure -v
-
-build: deps
+build:
 	mkdir -p bin
-	env GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o bin/$(SERVICE_NAME) main.go
+	env GOOS=linux GOARCH=amd64 GOPRIVATE=$(GOPRIVATE) go build $(LDFLAGS) -o bin/$(SERVICE_NAME) main.go
 	chmod +x bin/$(SERVICE_NAME)
 
-build-mac: deps
+build-mac:
 	mkdir -p bin
-	env GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o bin/$(SERVICE_NAME) main.go
+	env GOOS=darwin GOARCH=amd64 GOPRIVATE=$(GOPRIVATE) go build $(LDFLAGS) -o bin/$(SERVICE_NAME) main.go
 	chmod +x bin/$(SERVICE_NAME)
 
-build-aws-lambda: deps
+build-aws-lambda:
 	mkdir -p bin
-	env GOOS=linux GOARCH=amd64 go build $(LDFLAGS) $(BUILD_TAGS) -o bin/$(SERVICE_NAME) main.go
+	env GOOS=linux GOARCH=amd64 GOPRIVATE=$(GOPRIVATE) go build $(LDFLAGS) $(BUILD_TAGS) -o bin/$(SERVICE_NAME) main.go
 	chmod +x bin/$(SERVICE_NAME)
 
 $(LINT_TOOL):
@@ -105,4 +102,4 @@ safesql:
 	safesql -v $(GO_FILES)
 	#$(GOPATH)/src/github.com/communitybridge/safesql/bin/safesql -v $(GO_PKGS)
 
-all: clean swagger swagger-validate deps fmt build-mac test lint
+all: clean swagger swagger-validate fmt build-mac test lint
